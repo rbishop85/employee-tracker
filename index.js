@@ -1,5 +1,7 @@
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
+const { addDept, addRole, addEmp } = require('./helpers/add')
+const { viewDept, viewRole, viewEmp } = require('./helpers/view')
 
 const db = mysql.createConnection(
     {
@@ -61,27 +63,10 @@ function init() {
   whatToDo();
 }
 
-const viewDept = () => {
-  console.log("Viewing Departments");
-};
-const addDept = () => {
-  console.log("Adding Department");
-};
-const viewRole = () => {
-  console.log("Viewing Roles");
-};
-const addRole = () => {
-  console.log("Adding Roles");
-};
-const viewEmp = () => {
-  console.log("Viewing Employees");
-};
-const addEmp = () => {
-  console.log("Adding Employees");
-};
+
+
 const updateEmp = () => {
   console.log("Updating Employees");
 };
-
 
 init();
