@@ -3,15 +3,17 @@ const inquirer = require('inquirer');
 const { addDept, addRole, addEmp } = require('./helpers/add')
 const { viewDept, viewRole, viewEmp } = require('./helpers/view')
 
-const db = mysql.createConnection(
-    {
-      host: 'localhost',
-      user: 'root',
-      password: 'password',
-      database: 'employee_tracker_db'
-    },
-    console.log(`Connected to the employee_tracker_db database.`)
-  );
+
+const db = require('./helpers/connection');
+// const db = mysql.createConnection(
+//     {
+//       host: 'localhost',
+//       user: 'root',
+//       password: 'password',
+//       database: 'employee_tracker_db'
+//     },
+//     console.log(`Connected to the employee_tracker_db database.`)
+//   );
 
 function whatToDo() {
   inquirer.prompt([
@@ -63,10 +65,10 @@ function init() {
   whatToDo();
 }
 
-
-
 const updateEmp = () => {
   console.log("Updating Employees");
 };
 
 init();
+
+module.exports = { mysql, db };
