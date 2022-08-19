@@ -11,20 +11,62 @@ const db = require('./helpers/connection');
 
 async function whatToDo() {
 
-  const choiceRes = {
-    viewDept: viewDept,
-    addDept: addDept,
-    viewRole: viewRole,
-    addRole: addRole,
-    viewEmp: viewEmp,
-    addEmp: addEmp,
-    updateEmp: updateEmp
+  console.log("");
+
+  const toDo = {
+    departments: departments,
+    roles: roles,
+    employees: employees
   }
 
-  const questions = await inquirer.prompt([
+  const options = await inquirer.prompt([
     {
       type: 'list',
-      message: "What would you like to do?",
+      message: "What system would you like to interact with?",
+      name: 'choice',
+      choices: [
+        {
+          name: 'Departments',
+          value: 'departments'
+        },
+        {
+          name: 'Roles',
+          value: 'roles'
+        },
+        {
+          name: 'Employees',
+          value: 'employees'
+        },
+        {
+          name: 'Quit Program',
+          value: 'quit'
+        }
+      ],
+      prefix: '-'
+    }
+  ]);
+
+  if (options.choice === 'quit') {
+    process.exit();
+  } else {
+    toDo[options.choice]();
+  }
+
+};
+
+async function departments() {
+
+  console.log("");
+
+  const toDo = {
+    viewDept: viewDept,
+    addDept: addDept
+  }
+
+  const options = await inquirer.prompt([
+    {
+      type: 'list',
+      message: "How would you like to interact with Departments?",
       name: 'choice',
       choices: [
         {
@@ -36,6 +78,38 @@ async function whatToDo() {
           value: 'addDept'
         },
         {
+          name: 'Go Back',
+          value: 'back'
+        }
+      ],
+      prefix: '-'
+    }
+  ]);
+
+  if (options.choice === 'back') {
+    whatToDo();
+  } else {
+    toDo[options.choice]();
+  }
+
+};
+
+async function roles() {
+
+  console.log("");
+
+  const toDo = {
+    viewRole: viewRole,
+    addRole: addRole
+  }
+
+  const options = await inquirer.prompt([
+    {
+      type: 'list',
+      message: "How would you like to interact with Roles?",
+      name: 'choice',
+      choices: [
+        {
           name: 'View All Roles',
           value: 'viewRole'
         },
@@ -43,6 +117,39 @@ async function whatToDo() {
           name: 'Add A Role',
           value: 'addRole'
         },
+        {
+          name: 'Go Back',
+          value: 'back'
+        }
+      ],
+      prefix: '-'
+    }
+  ]);
+
+  if (options.choice === 'back') {
+    whatToDo();
+  } else {
+    toDo[options.choice]();
+  }
+
+};
+
+async function employees() {
+
+  console.log("");
+
+  const toDo = {
+    viewEmp: viewEmp,
+    addEmp: addEmp,
+    updateEmp: updateEmp
+  }
+
+  const options = await inquirer.prompt([
+    {
+      type: 'list',
+      message: "How would you like to interact with Employees?",
+      name: 'choice',
+      choices: [
         {
           name: 'View All Employees',
           value: 'viewEmp'
@@ -54,20 +161,28 @@ async function whatToDo() {
         {
           name: `Update An Employee's Role`,
           value: 'updateEmp'
+        },
+        {
+          name: 'Go Back',
+          value: 'back'
         }
       ],
       prefix: '-'
     }
   ]);
 
-  choiceRes[questions.choice]();
+  if (options.choice === 'back') {
+    whatToDo();
+  } else {
+    toDo[options.choice]();
+  }
 
 };
 
 function init() {
+  console.log("");
+  console.log("Greetings Business Owner!");
   whatToDo();
 }
-
-
 
 init();
