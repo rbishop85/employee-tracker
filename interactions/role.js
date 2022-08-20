@@ -4,7 +4,7 @@ const utils = require('util');
 
 db.query = utils.promisify(db.query);
 
-const viewRole = async () => {
+const roleList = async () => {
     const data = await db.query(`
         SELECT r.id ID, r.title Title, d.name Department, r.salary Salary
         FROM role r
@@ -13,8 +13,19 @@ const viewRole = async () => {
     return data;
 };
 
-const addRole = () => {
-    console.log("Adding Roles");
+const newRole = (data) => {
+    console.log(data);
+    db.query(`
+        INSERT INTO role (title, salary, department_id, is_manager)
+        VALUES (?, ?, ?, ?)
+    `, [data.name, data.salary, data.dept, data.manager]);
 };
 
-module.exports = { viewRole, addRole };
+const deleteRole = (data) => {
+    db.query(`
+    DELETE FROM role
+    WHERE id = ?
+    `, data);
+};
+
+module.exports = { roleList, newRole, deleteRole };

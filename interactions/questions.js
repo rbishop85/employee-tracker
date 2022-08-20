@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
 const { deptList, newDept, deleteDept } = require('./department');
-const { viewRole, addRole } = require('./role');
+const { roleList, newRole, deleteRole } = require('./role');
 const { viewEmp, addEmp, updateEmp } = require('./employee');
 const { table } = require('../helpers/utils');
 
@@ -113,8 +113,8 @@ async function addDept() {
     }
   ]);
   newDept(deptName);
-  console.log("");
-  console.log(`${deptName.name} added to Departments list.`)
+  console.log('');
+  console.log('New department added.')
   departments();
 
 };
@@ -152,7 +152,8 @@ async function roles() {
   
     const toDo = {
       viewRole: viewRole,
-      addRole: addRole
+      addRole: addRole,
+      remRole: remRole
     }
   
     const options = await inquirer.prompt([
@@ -170,6 +171,10 @@ async function roles() {
             value: 'addRole'
           },
           {
+            name: 'Remove A Role',
+            value: 'remRole'
+          },
+          {
             name: 'Go Back',
             value: 'back'
           }
@@ -181,11 +186,103 @@ async function roles() {
     if (options.choice === 'back') {
       whatToDo();
     } else {
-      const info = await toDo[options.choice]();
-      table(info);
-      roles();
+      toDo[options.choice]();
     }
-  
+};
+
+async function viewRole() {
+  const info = await roleList();
+  table(info);
+  roles();
+};
+
+async function addRole() {
+
+  const depts = await deptList();
+
+  const deptChoices = depts.map(dept => ({
+    name: dept.Department,
+    value: dept.ID
+  }) );
+
+  console.log("Adding New Role...")
+  const roleObject = await inquirer.prompt([
+    {
+      type: 'input',
+      message: 'What is the name of the new role?',
+      name: 'name',
+      prefix: '-',
+      validate: Boolean
+    },
+    {
+      type: 'input',
+      message: 'What is the salary for the new role?',
+      name: 'salary',
+      prefix: '-',
+      validate: function(value) {
+        var pass = !isNaN(value)
+        if (pass) {
+          return true
+        }
+        return 'Please enter a valid number for the salary'
+      },
+    },
+    {
+      type: 'list',
+      message: 'Which department does the role belong to?',
+      name: 'dept',
+      choices: deptChoices,
+      prefix: '-'
+    },
+    {
+      type: 'list',
+      message: 'Is this role considered a manager?',
+      name: 'manager',
+      choices: [
+        {
+          name: 'Yes',
+          value: true
+        },
+        {
+          name: 'No',
+          value: false
+        }
+      ],
+      prefix: '-'
+    }
+  ]);
+  newRole(roleObject);
+  console.log("");
+  console.log('New role added.')
+  roles();
+
+};
+
+async function remRole() {
+
+  const allRoles = await roleList();
+
+  // console.log(allRoles);
+
+  const roleChoices = allRoles.map(role => ({
+    name: role.Title,
+    value: role.ID
+  }) );
+
+  const chosenRole = await inquirer.prompt([
+    {
+      type: 'list',
+      message: 'Which Department would you like to remove?',
+      name: 'choice',
+      choices: roleChoices,
+      prefix: '-'
+    }
+  ]);
+
+  deleteRole(chosenRole.choice);
+  console.log("Chosen role removed.")
+  roles();
+
 };
   
 async function employees() {

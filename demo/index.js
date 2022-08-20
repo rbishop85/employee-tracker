@@ -31,15 +31,7 @@
 
 
     //Departments
-        // View Departments
-        // Add Department
-        // Remove Department
         // - View total budget of department (combined salary of all employees)
-
-    // Roles
-        // View Roles
-        // Add Role
-        // - Remove Role
 
     // Empoyees
         // View Empoyees
@@ -49,6 +41,8 @@
         // - View Employees by Manager
         // - View Employees by Department
         // - Remove Employee
+
+    // Add a confirmation when deleting anything....
 
         
 
