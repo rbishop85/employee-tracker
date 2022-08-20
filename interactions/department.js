@@ -4,7 +4,7 @@ const utils = require('util');
 
 db.query = utils.promisify(db.query);
 
-const viewDept = async () => {
+const deptList = async () => {
     const data = await db.query(`
         SELECT id ID, name Department
         FROM department
@@ -12,8 +12,20 @@ const viewDept = async () => {
     return data;
 };
 
-const addDept = async () => {
-    console.log("Adding Department");
+const newDept = (data) => {
+    const name = data.name;
+    // console.log(name);
+    db.query(`
+        INSERT INTO department (name)
+        VALUES (?)
+    `, name);
 };
 
-module.exports = { viewDept, addDept };
+const deleteDept = (data) => {
+    db.query(`
+    DELETE FROM department
+    WHERE id = ?
+    `, data)
+};
+
+module.exports = { deptList, newDept, deleteDept };

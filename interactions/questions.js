@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const { viewDept, addDept } = require('./department');
+const { deptList, newDept, deleteDept } = require('./department');
 const { viewRole, addRole } = require('./role');
 const { viewEmp, addEmp, updateEmp } = require('./employee');
 const { table } = require('../helpers/utils');
@@ -57,7 +57,8 @@ async function departments() {
   
     const toDo = {
       viewDept: viewDept,
-      addDept: addDept
+      addDept: addDept,
+      remDept: remDept
     }
   
     const options = await inquirer.prompt([
@@ -75,6 +76,10 @@ async function departments() {
             value: 'addDept'
           },
           {
+            name: 'Remove A Department',
+            value: 'remDept'
+          },
+          {
             name: 'Go Back',
             value: 'back'
           }
@@ -86,11 +91,59 @@ async function departments() {
     if (options.choice === 'back') {
       whatToDo();
     } else {
-      const info = await toDo[options.choice]();
-      table(info);
-      departments();
+      toDo[options.choice]();
     }
-  
+};
+
+async function viewDept() {
+  const info = await deptList();
+  table(info);
+  departments();
+};
+
+async function addDept() {
+  console.log("Adding New Department...")
+  const deptName = await inquirer.prompt([
+    {
+      type: 'input',
+      message: 'What is the name of the new department?',
+      name: 'name',
+      prefix: '-',
+      validate: Boolean
+    }
+  ]);
+  newDept(deptName);
+  console.log("");
+  console.log(`${deptName.name} added to Departments list.`)
+  departments();
+
+};
+
+async function remDept() {
+
+  const depts = await deptList();
+
+  const deptChoices = depts.map(dept => ({
+    name: dept.Department,
+    value: dept.ID
+  }) );
+
+  const chosenDept = await inquirer.prompt([
+    {
+      type: 'list',
+      message: 'Which Department would you like to remove?',
+      name: 'choice',
+      choices: deptChoices,
+      prefix: '-'
+    }
+  ]);
+
+  console.log(chosenDept.choice);
+  deleteDept(chosenDept.choice);
+  console.log("Chosen department removed.")
+  departments();
+
+
 };
   
 async function roles() {

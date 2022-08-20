@@ -33,8 +33,8 @@
     //Departments
         // View Departments
         // Add Department
-        // - Remove Department
-        // - View tota budget of department (combined salary of all employees)
+        // Remove Department
+        // - View total budget of department (combined salary of all employees)
 
     // Roles
         // View Roles
@@ -50,8 +50,6 @@
         // - View Employees by Department
         // - Remove Employee
 
-        const array = [{myId: 42, name: 'John', color: 'red'}, {myId: 1337, name: 'Jane', color: 'blue'}]
+        
 
-// const transformed = array.reduce((acc, {myId, ...x}) => { acc[myId] = x; return acc}, {})
 
-console.table(array)
