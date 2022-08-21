@@ -31,6 +31,8 @@ async function whatToDo() {
     }
   ]);
 
+  console.log("");
+
   if (options.choice === 'quit') {
     console.log('');
     console.log('Goodbye.');
@@ -42,8 +44,6 @@ async function whatToDo() {
 };
 
 async function departments() {
-
-  console.log('');
 
   const toDo = {
     viewDept: viewDept,

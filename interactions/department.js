@@ -21,7 +21,7 @@ const deptList = async () => {
 };
 
 const addDept = async () => {
-  console.log("Adding New Department...");
+  console.log("");
   const deptName = await inquirer.prompt([
     {
       type: "input",
@@ -29,7 +29,7 @@ const addDept = async () => {
       name: "name",
       prefix: "-",
       validate: Boolean,
-    }
+    },
   ]);
 
   await db.query(
@@ -41,9 +41,11 @@ const addDept = async () => {
   );
   console.log("");
   console.log("New department added.");
+  console.log("");
 };
 
 async function remDept() {
+  console.log("");
   const depts = await deptList();
 
   const deptChoices = depts.map((dept) => ({
@@ -58,7 +60,7 @@ async function remDept() {
       name: "choice",
       choices: deptChoices,
       prefix: "-",
-    }
+    },
   ]);
   await db.query(
     `
@@ -69,6 +71,7 @@ async function remDept() {
   );
   console.log("");
   console.log("Chosen department removed.");
-};
+  console.log("");
+}
 
 module.exports = { viewDept, deptList, addDept, remDept };
