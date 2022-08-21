@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const { deptList, newDept, deleteDept } = require('./department');
 const { roleList, newRole, deleteRole } = require('./role');
-const { viewEmp, addEmp, updateEmp } = require('./employee');
+const { empList, newEmp, updateEmp, managerList } = require('./employee');
 const { table } = require('../helpers/utils');
 
 async function whatToDo() {
@@ -292,7 +292,7 @@ async function employees() {
     const toDo = {
       viewEmp: viewEmp,
       addEmp: addEmp,
-      updateEmp: updateEmp
+      updateEmpRole: updateEmpRole
     }
   
     const options = await inquirer.prompt([
@@ -311,7 +311,7 @@ async function employees() {
           },
           {
             name: `Update An Employee's Role`,
-            value: 'updateEmp'
+            value: 'updateEmpRole'
           },
           {
             name: 'Go Back',
@@ -325,22 +325,69 @@ async function employees() {
     if (options.choice === 'back') {
       whatToDo();
     } else {
-      const info = await toDo[options.choice]();
-      table(info);
-      employees();
+      toDo[options.choice]();
     }
   
 };
 
+async function viewEmp() {
+  const info = await empList();
+  table(info);
+  employees();
+};
 
+async function addEmp() {
 
+  const roleOptions = await roleList();
 
+  const roleChoices = roleOptions.map(role => ({
+    name: role.Title,
+    value: role.ID
+  }) );
 
+  const managerOptions = await managerList();
 
+  const managerChoices = managerOptions.map(manager => ({
+    name: manager.name,
+    value: manager.id
+  }) );
 
-
-
-
+  console.log("Adding New Employee...")
+  const empObject = await inquirer.prompt([
+    {
+      type: 'input',
+      message: `What is the employee's first name?`,
+      name: 'first',
+      prefix: '-',
+      validate: Boolean
+    },
+    {
+      type: 'input',
+      message: `What is the employee's last name?`,
+      name: 'last',
+      prefix: '-',
+      validate: Boolean
+    },
+    {
+      type: 'list',
+      message: `What is this employee's role?`,
+      name: 'role',
+      choices: roleChoices,
+      prefix: '-'
+    },
+    {
+      type: 'list',
+      message: `Who is this employee's manager?`,
+      name: 'manager',
+      choices: managerChoices,
+      prefix: '-'
+    },
+  ]);
+  newEmp(empObject);
+  console.log("");
+  console.log('New employee added.')
+  employees();
+};
 
 
 module.exports = { whatToDo };

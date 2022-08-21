@@ -14,7 +14,6 @@ const roleList = async () => {
 };
 
 const newRole = (data) => {
-    console.log(data);
     db.query(`
         INSERT INTO role (title, salary, department_id, is_manager)
         VALUES (?, ?, ?, ?)

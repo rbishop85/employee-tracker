@@ -14,7 +14,6 @@ const deptList = async () => {
 
 const newDept = (data) => {
     const name = data.name;
-    // console.log(name);
     db.query(`
         INSERT INTO department (name)
         VALUES (?)

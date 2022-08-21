@@ -2,14 +2,6 @@
 
 
 
-// View all departments
-    // SELECT * FROM department;
-
-// View all roles
-    // SELECT * FROM role;
-
-// View all empoyees
-    // SELECT * FROM empoyee (try to bring in joins to mirror example video);
 
 // Create new department
     // INSERT INTO department (name)
@@ -34,8 +26,11 @@
         // - View total budget of department (combined salary of all employees)
 
     // Empoyees
-        // View Empoyees
         // Add Employee
+            // First Name
+            // Last Name
+            // Role ID (By Selecting Role name from list)
+            // Manager ID (By Selecting Manager name from list)
         // Update Employee's Role
         // - Update Employee's Manager
         // - View Employees by Manager

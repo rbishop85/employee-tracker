@@ -4,8 +4,7 @@ const utils = require('util');
 
 db.query = utils.promisify(db.query);
 
-const viewEmp = async () => {
-    // const data = await db.query('SELECT * FROM employee');
+const empList = async () => {
     const data = await db.query(`
       SELECT e.id ID, e.first_name FirstName, e.last_name LastName, r.title Title, d.name AS Department, r.salary Salary, CONCAT(e2.first_name, ' ', e2.last_name) Manager
       FROM employee e
@@ -16,17 +15,28 @@ const viewEmp = async () => {
     return data;
 };
 
-const addEmp = () => {
-    console.log("Adding Employees");
+const newEmp = (data) => {
+    db.query(`
+        INSERT INTO employee (first_name, last_name, role_id, manager_id)
+        VALUES (?, ?, ?, ?)
+    `, [data.first, data.last, data.role, data.manager]);
 };
 
 const updateEmp = () => {
     console.log("Updating Employees");
-  };
+};
 
-module.exports = { viewEmp, addEmp, updateEmp };
+const managerList = async () => {
+  const data = await db.query(`
+    SELECT e.id, CONCAT(e.first_name, ' ', e.last_name, ' from ', d.name) name, r.is_manager
+    FROM employee e
+    JOIN role r ON e.role_id = r.id
+    JOIN department d ON r.department_id = d.id
+    WHERE r.is_manager = 1
+    `);
+    // console.log(data);
+  return data;
+};
 
+module.exports = { empList, newEmp, updateEmp, managerList };
 
-// 'SELECT * FROM employee AS e JOIN role AS r ON e.role_id = r.id'
-
-// SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, e2.first_name
