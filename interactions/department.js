@@ -29,7 +29,7 @@ const addDept = async () => {
       name: "name",
       prefix: "-",
       validate: Boolean,
-    },
+    }
   ]);
 
   await db.query(
@@ -58,7 +58,7 @@ async function remDept() {
       name: "choice",
       choices: deptChoices,
       prefix: "-",
-    },
+    }
   ]);
   await db.query(
     `
