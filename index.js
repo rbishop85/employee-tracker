@@ -7,6 +7,7 @@ const db = require('./helpers/connection');
 const { deptList, newDept, deleteDept } = require('./interactions/department');
 const { roleList, newRole, deleteRole } = require('./interactions/role');
 const { empList, newEmp, updEmpRole, managerList, updEmpMan, deleteEmp } = require('./interactions/employee');
+const { whatToDoQs, deptToDoQs, roleToDoQs, empToDoQs } = require('./helpers/questions');
 
 const { table } = require('./helpers/utils');
 
@@ -25,24 +26,7 @@ async function whatToDo() {
       type: 'list',
       message: 'What system would you like to interact with?',
       name: 'choice',
-      choices: [
-        {
-          name: 'Departments',
-          value: 'departments'
-        },
-        {
-          name: 'Roles',
-          value: 'roles'
-        },
-        {
-          name: 'Employees',
-          value: 'employees'
-        },
-        {
-          name: 'Quit Program',
-          value: 'quit'
-        }
-      ],
+      choices: whatToDoQs,
       prefix: '-'
     }
   ]);
@@ -72,24 +56,7 @@ async function departments() {
       type: 'list',
       message: 'How would you like to interact with Departments?',
       name: 'choice',
-      choices: [
-        {
-          name: 'View All Departments',
-          value: 'viewDept'
-        },
-        {
-          name: 'Add A Department',
-          value: 'addDept'
-        },
-        {
-          name: 'Remove A Department',
-          value: 'remDept'
-        },
-        {
-          name: 'Go Back',
-          value: 'back'
-        }
-      ],
+      choices: deptToDoQs,
       prefix: '-'
     }
   ]);
@@ -165,24 +132,7 @@ async function roles() {
       type: 'list',
       message: 'How would you like to interact with Roles?',
       name: 'choice',
-      choices: [
-        {
-          name: 'View All Roles',
-          value: 'viewRole'
-        },
-        {
-          name: 'Add A Role',
-          value: 'addRole'
-        },
-        {
-          name: 'Remove A Role',
-          value: 'remRole'
-        },
-        {
-          name: 'Go Back',
-          value: 'back'
-        }
-      ],
+      choices: roleToDoQs,
       prefix: '-'
     }
   ]);
@@ -306,32 +256,7 @@ async function employees() {
       type: 'list',
       message: 'How would you like to interact with Employees?',
       name: 'choice',
-      choices: [
-        {
-          name: 'View All Employees',
-          value: 'viewEmp'
-        },
-        {
-          name: 'Add An Employee',
-          value: 'addEmp'
-        },
-        {
-          name: `Update An Employee's Role`,
-          value: 'updateEmpRole'
-        },
-        {
-          name: `Update An Employee's Manager`,
-          value: 'updateEmpMan'
-        },
-        {
-          name: `Remove An Employee`,
-          value: 'remEmp'
-        },
-        {
-          name: 'Go Back',
-          value: 'back'
-        }
-      ],
+      choices: empToDoQs,
       prefix: '-'
     }
   ]);
