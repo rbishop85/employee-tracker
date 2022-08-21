@@ -22,8 +22,27 @@ const newEmp = (data) => {
     `, [data.first, data.last, data.role, data.manager]);
 };
 
-const updateEmp = () => {
-    console.log("Updating Employees");
+const updEmpRole = (data) => {
+    db.query(`
+        UPDATE employee
+        SET role_id = ?
+        WHERE id = ?
+    `, [data.role, data.employee]);
+};
+
+const updEmpMan = (data) => {
+    db.query(`
+        UPDATE employee
+        SET manager_id = ?
+        WHERE id = ?
+    `, [data.manager, data.employee]);
+};
+
+const deleteEmp = (data) => {
+    db.query(`
+    DELETE FROM employee
+    WHERE id = ?
+    `, data)
 };
 
 const managerList = async () => {
@@ -38,5 +57,5 @@ const managerList = async () => {
   return data;
 };
 
-module.exports = { empList, newEmp, updateEmp, managerList };
+module.exports = { empList, newEmp, updEmpRole, managerList, updEmpMan, deleteEmp };
 

@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const { deptList, newDept, deleteDept } = require('./department');
 const { roleList, newRole, deleteRole } = require('./role');
-const { empList, newEmp, updateEmp, managerList } = require('./employee');
+const { empList, newEmp, updEmpRole, managerList, updEmpMan, deleteEmp } = require('./employee');
 const { table } = require('../helpers/utils');
 
 async function whatToDo() {
@@ -137,8 +137,6 @@ async function remDept() {
       prefix: '-'
     }
   ]);
-
-  console.log(chosenDept.choice);
   deleteDept(chosenDept.choice);
   console.log("Chosen department removed.")
   departments();
@@ -292,7 +290,9 @@ async function employees() {
     const toDo = {
       viewEmp: viewEmp,
       addEmp: addEmp,
-      updateEmpRole: updateEmpRole
+      updateEmpRole: updateEmpRole,
+      updateEmpMan: updateEmpMan,
+      remEmp: remEmp
     }
   
     const options = await inquirer.prompt([
@@ -312,6 +312,14 @@ async function employees() {
           {
             name: `Update An Employee's Role`,
             value: 'updateEmpRole'
+          },
+          {
+            name: `Update An Employee's Manager`,
+            value: 'updateEmpMan'
+          },
+          {
+            name: `Remove An Employee`,
+            value: 'remEmp'
           },
           {
             name: 'Go Back',
@@ -389,5 +397,107 @@ async function addEmp() {
   employees();
 };
 
+async function updateEmpRole() {
+
+  const roleOptions = await roleList();
+
+  const roleChoices = roleOptions.map(role => ({
+    name: role.Title,
+    value: role.ID
+  }) );
+
+  const employeeOptions = await empList();
+
+  const employeeChoices = employeeOptions.map(employee => ({
+    name: (`${employee.FirstName} ${employee.LastName}: ${employee.Title}`),
+    value: employee.ID,
+  }));
+
+  console.log('')
+
+  const empObject = await inquirer.prompt([
+    {
+      type: 'list',
+      message: `Which employee needs to have their role changed?`,
+      name: 'employee',
+      choices: employeeChoices,
+      prefix: '-'
+    },
+    {
+      type: 'list',
+      message: `What is this employee's new role?`,
+      name: 'role',
+      choices: roleChoices,
+      prefix: '-'
+    },
+  ]);
+  updEmpRole(empObject)
+  console.log("");
+  console.log(`Employee's role updated.`)
+  employees();
+};
+
+async function updateEmpMan() {
+
+  const employeeOptions = await empList();
+
+  const employeeChoices = employeeOptions.map(employee => ({
+    name: (`${employee.FirstName} ${employee.LastName} - Current Manager: ${employee.Manager}`),
+    value: employee.ID,
+  }));
+
+  const managerOptions = await managerList();
+
+  const managerChoices = managerOptions.map(manager => ({
+    name: manager.name,
+    value: manager.id
+  }) );
+
+  const empObject = await inquirer.prompt([
+    {
+      type: 'list',
+      message: `Which employee needs to have their manager changed?`,
+      name: 'employee',
+      choices: employeeChoices,
+      prefix: '-'
+    },
+    {
+      type: 'list',
+      message: `Who is this employee's new manager?`,
+      name: 'manager',
+      choices: managerChoices,
+      prefix: '-'
+    },
+  ]);
+  updEmpMan(empObject)
+  console.log("");
+  console.log(`Employee's manager updated.`)
+  employees();
+
+};
+
+async function remEmp() {
+
+  const employeeOptions = await empList();
+
+  const employeeChoices = employeeOptions.map(emp => ({
+    name: (`${emp.FirstName} ${emp.LastName}: ${emp.Title}`),
+    value: emp.ID
+  }) );
+
+  const empObject = await inquirer.prompt([
+    {
+      type: 'list',
+      message: 'Which employee would you like to remove?',
+      name: 'choice',
+      choices: employeeChoices,
+      prefix: '-'
+    }
+  ]);
+  deleteEmp(empObject.choice);
+  console.log('');
+  console.log("Chosen employee removed.");
+  employees();
+};
 
 module.exports = { whatToDo };
