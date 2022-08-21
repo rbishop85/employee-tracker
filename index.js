@@ -4,7 +4,7 @@ const utils = require('util')
 
 const db = require('./helpers/connection');
 
-const { deptList, newDept, deleteDept } = require('./interactions/department');
+const { viewDept, deptList, addDept, remDept } = require('./interactions/department');
 const { roleList, newRole, deleteRole } = require('./interactions/role');
 const { empList, newEmp, updEmpRole, managerList, updEmpMan, deleteEmp } = require('./interactions/employee');
 const { whatToDoQs, deptToDoQs, roleToDoQs, empToDoQs } = require('./helpers/questions');
@@ -64,57 +64,9 @@ async function departments() {
   if (options.choice === 'back') {
     whatToDo();
   } else {
-    toDo[options.choice]();
+    await toDo[options.choice]();
+    departments();
   }
-};
-
-async function viewDept() {
-const info = await deptList();
-table(info);
-departments();
-};
-
-async function addDept() {
-console.log("Adding New Department...")
-const deptName = await inquirer.prompt([
-  {
-    type: 'input',
-    message: 'What is the name of the new department?',
-    name: 'name',
-    prefix: '-',
-    validate: Boolean
-  }
-]);
-newDept(deptName);
-console.log('');
-console.log('New department added.')
-departments();
-
-};
-
-async function remDept() {
-
-const depts = await deptList();
-
-const deptChoices = depts.map(dept => ({
-  name: dept.Department,
-  value: dept.ID
-}) );
-
-const chosenDept = await inquirer.prompt([
-  {
-    type: 'list',
-    message: 'Which Department would you like to remove?',
-    name: 'choice',
-    choices: deptChoices,
-    prefix: '-'
-  }
-]);
-deleteDept(chosenDept.choice);
-console.log("Chosen department removed.")
-departments();
-
-
 };
 
 async function roles() {
