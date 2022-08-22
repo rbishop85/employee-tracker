@@ -7,17 +7,17 @@ const { table } = require("../helpers/utils");
 
 db.query = utils.promisify(db.query);
 
-const viewDept = async () => {
-  const info = await deptList();
-  table(info);
-};
-
 const deptList = async () => {
   const data = await db.query(`
         SELECT id ID, name Department
         FROM department
         `);
   return data;
+};
+
+const viewDept = async () => {
+  const info = await deptList();
+  table(info);
 };
 
 const addDept = async () => {
@@ -44,7 +44,7 @@ const addDept = async () => {
   console.log("");
 };
 
-async function remDept() {
+const remDept = async () => {
   console.log("");
   const depts = await deptList();
 

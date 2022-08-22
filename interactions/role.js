@@ -18,12 +18,12 @@ const roleList = async () => {
   return data;
 };
 
-async function viewRole() {
+const viewRole = async () => {
   const info = await roleList();
   table(info);
 }
 
-async function addRole() {
+const addRole = async () => {
   const depts = await deptList();
 
   const deptChoices = depts.map((dept) => ({
@@ -91,7 +91,7 @@ async function addRole() {
   console.log("");
 }
 
-async function remRole() {
+const remRole = async () => {
   const allRoles = await roleList();
 
   const roleChoices = allRoles.map((role) => ({

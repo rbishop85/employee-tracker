@@ -4,9 +4,9 @@ const utils = require('util')
 
 const db = require('./helpers/connection');
 
-const { viewDept, deptList, addDept, remDept } = require('./interactions/department');
-const { viewRole, roleList, addRole, remRole } = require('./interactions/role');
-const { empList, newEmp, updEmpRole, managerList, updEmpMan, deleteEmp } = require('./interactions/employee');
+const { viewDept, addDept, remDept } = require('./interactions/department');
+const { viewRole, addRole, remRole } = require('./interactions/role');
+const { viewEmp, addEmp, updateEmpRole, updateEmpMan, remEmp } = require('./interactions/employee');
 const { whatToDoQs, deptToDoQs, roleToDoQs, empToDoQs } = require('./helpers/questions');
 
 const { table } = require('./helpers/utils');
@@ -122,171 +122,10 @@ async function employees() {
   if (options.choice === 'back') {
     whatToDo();
   } else {
-    toDo[options.choice]();
+    await toDo[options.choice]();
+    employees();
   }
 
-};
-
-async function viewEmp() {
-const info = await empList();
-table(info);
-employees();
-};
-
-async function addEmp() {
-
-const roleOptions = await roleList();
-
-const roleChoices = roleOptions.map(role => ({
-  name: role.Title,
-  value: role.ID
-}) );
-
-const managerOptions = await managerList();
-
-const managerChoices = managerOptions.map(manager => ({
-  name: manager.name,
-  value: manager.id
-}) );
-
-console.log("Adding New Employee...")
-const empObject = await inquirer.prompt([
-  {
-    type: 'input',
-    message: `What is the employee's first name?`,
-    name: 'first',
-    prefix: '-',
-    validate: Boolean
-  },
-  {
-    type: 'input',
-    message: `What is the employee's last name?`,
-    name: 'last',
-    prefix: '-',
-    validate: Boolean
-  },
-  {
-    type: 'list',
-    message: `What is this employee's role?`,
-    name: 'role',
-    choices: roleChoices,
-    prefix: '-'
-  },
-  {
-    type: 'list',
-    message: `Who is this employee's manager?`,
-    name: 'manager',
-    choices: managerChoices,
-    prefix: '-'
-  },
-]);
-newEmp(empObject);
-console.log("");
-console.log('New employee added.')
-employees();
-};
-
-async function updateEmpRole() {
-
-const roleOptions = await roleList();
-
-const roleChoices = roleOptions.map(role => ({
-  name: role.Title,
-  value: role.ID
-}) );
-
-const employeeOptions = await empList();
-
-const employeeChoices = employeeOptions.map(employee => ({
-  name: (`${employee.FirstName} ${employee.LastName}: ${employee.Title}`),
-  value: employee.ID,
-}));
-
-console.log('')
-
-const empObject = await inquirer.prompt([
-  {
-    type: 'list',
-    message: `Which employee needs to have their role changed?`,
-    name: 'employee',
-    choices: employeeChoices,
-    prefix: '-'
-  },
-  {
-    type: 'list',
-    message: `What is this employee's new role?`,
-    name: 'role',
-    choices: roleChoices,
-    prefix: '-'
-  },
-]);
-updEmpRole(empObject)
-console.log("");
-console.log(`Employee's role updated.`)
-employees();
-};
-
-async function updateEmpMan() {
-
-const employeeOptions = await empList();
-
-const employeeChoices = employeeOptions.map(employee => ({
-  name: (`${employee.FirstName} ${employee.LastName} - Current Manager: ${employee.Manager}`),
-  value: employee.ID,
-}));
-
-const managerOptions = await managerList();
-
-const managerChoices = managerOptions.map(manager => ({
-  name: manager.name,
-  value: manager.id
-}) );
-
-const empObject = await inquirer.prompt([
-  {
-    type: 'list',
-    message: `Which employee needs to have their manager changed?`,
-    name: 'employee',
-    choices: employeeChoices,
-    prefix: '-'
-  },
-  {
-    type: 'list',
-    message: `Who is this employee's new manager?`,
-    name: 'manager',
-    choices: managerChoices,
-    prefix: '-'
-  },
-]);
-updEmpMan(empObject)
-console.log("");
-console.log(`Employee's manager updated.`)
-employees();
-
-};
-
-async function remEmp() {
-
-const employeeOptions = await empList();
-
-const employeeChoices = employeeOptions.map(emp => ({
-  name: (`${emp.FirstName} ${emp.LastName}: ${emp.Title}`),
-  value: emp.ID
-}) );
-
-const empObject = await inquirer.prompt([
-  {
-    type: 'list',
-    message: 'Which employee would you like to remove?',
-    name: 'choice',
-    choices: employeeChoices,
-    prefix: '-'
-  }
-]);
-deleteEmp(empObject.choice);
-console.log('');
-console.log("Chosen employee removed.");
-employees();
 };
 
 function init() {
