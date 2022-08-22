@@ -30,7 +30,7 @@ This project is intended as a homework assignment for class.  Questions, comment
 
 > Video demoing team profile generator in action.
 
-./
+https://user-images.githubusercontent.com/103389448/185840499-e945aa2f-8c76-4072-82b0-e6af8488b0eb.mp4
 
 ---
 
