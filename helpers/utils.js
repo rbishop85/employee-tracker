@@ -1,3 +1,4 @@
+// Helper function for printing tables, pulled from stackoverflow
 const { Console } = require('console');
 const { Transform } = require('stream');
 

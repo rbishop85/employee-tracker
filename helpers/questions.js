@@ -1,3 +1,4 @@
+// Initial line of questions for user to select what table they want to interact with.
 const whatToDoQs = [
     {
       name: 'Departments',
@@ -17,6 +18,7 @@ const whatToDoQs = [
     }
 ];   
 
+// Line of questions asking user how they want to interact with departments.
 const deptToDoQs = [
     {
       name: 'View All Departments',
@@ -36,6 +38,7 @@ const deptToDoQs = [
     }
 ];
 
+// Line of questions asking user how they want to interact with roles.
 const roleToDoQs = [
     {
       name: 'View All Roles',
@@ -55,6 +58,7 @@ const roleToDoQs = [
     }
 ];
 
+// Line of questions asking user how they want to interact with employees.
 const empToDoQs = [
     {
       name: 'View All Employees',
@@ -82,4 +86,5 @@ const empToDoQs = [
     }
 ];
 
+// Question arrays are exported.
 module.exports = { whatToDoQs, deptToDoQs, roleToDoQs, empToDoQs };

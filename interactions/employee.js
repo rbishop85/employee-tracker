@@ -1,14 +1,17 @@
+// Pulls in required items.
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
 const { db } = require("../helpers/connection");
 const utils = require("util");
-
-const { roleList } = require("./role");
-
 const { table } = require("../helpers/utils");
 
+// Connects to needed roles function.
+const { roleList } = require("./role");
+
+// Allows db.query to use async and await.
 db.query = utils.promisify(db.query);
 
+// DB query to pull employees list.
 const empList = async () => {
   const data = await db.query(`
       SELECT e.id ID, e.first_name FirstName, e.last_name LastName, r.title Title, d.name AS Department, r.salary Salary, CONCAT(e2.first_name, ' ', e2.last_name) Manager
@@ -20,19 +23,22 @@ const empList = async () => {
   return data;
 };
 
+// Function to display list of employees.
 const viewEmp = async () => {
   const info = await empList();
   table(info);
 };
 
+// Function to add a new employee.
 const addEmp = async () => {
+  // Pulls list of available roles and assigns them to a choice list.
   const roleOptions = await roleList();
 
   const roleChoices = roleOptions.map((role) => ({
     name: role.Title,
     value: role.ID,
   }));
-
+  // Pulls list of available managers and assigns them to a choice list.
   const managerOptions = await managerList();
 
   const managerChoices = managerOptions.map((manager) => ({
@@ -41,6 +47,7 @@ const addEmp = async () => {
   }));
 
   console.log("");
+  // Asks the user for info about the new user.
   const empObject = await inquirer.prompt([
     {
       type: "input",
@@ -71,7 +78,7 @@ const addEmp = async () => {
       prefix: "-",
     },
   ]);
-
+  // Inserts the new employee into the table.
   await db.query(
     `
         INSERT INTO employee (first_name, last_name, role_id, manager_id)
@@ -85,8 +92,9 @@ const addEmp = async () => {
   console.log("");
 };
 
+// Function to update an employee's role.
 const updateEmpRole = async () => {
-
+// Pulls list of available roles and assigns them to a choices array.
 const roleOptions = await roleList();
 
 const roleChoices = roleOptions.map(role => ({
@@ -94,6 +102,7 @@ const roleChoices = roleOptions.map(role => ({
   value: role.ID
 }) );
 
+// Pulls list of available employees and assigns them to a choices array.
 const employeeOptions = await empList();
 
 const employeeChoices = employeeOptions.map(employee => ({
@@ -102,6 +111,7 @@ const employeeChoices = employeeOptions.map(employee => ({
 }));
 
 console.log('')
+// Asks the user about the employee they wish to update and the new role they wish to assign.
 const empObject = await inquirer.prompt([
   {
     type: 'list',
@@ -118,7 +128,7 @@ const empObject = await inquirer.prompt([
     prefix: '-'
   },
 ]);
-
+// Edits given employee's data in the table to reflect the new role.
 await db.query(
     `
         UPDATE employee
@@ -133,15 +143,16 @@ console.log(`Employee's role updated.`);
 console.log("");
 };
 
+// Function to update an employee's manager
 const updateEmpMan = async () => {
-
+// Pulls a list of available employees and adds them to a choices array.
 const employeeOptions = await empList();
 
 const employeeChoices = employeeOptions.map(employee => ({
   name: (`${employee.FirstName} ${employee.LastName} - Current Manager: ${employee.Manager}`),
   value: employee.ID,
 }));
-
+// Pulls a list of available managers and adds them to a choices array.
 const managerOptions = await managerList();
 
 const managerChoices = managerOptions.map(manager => ({
@@ -150,6 +161,7 @@ const managerChoices = managerOptions.map(manager => ({
 }) );
 
 console.log("");
+// Asks user which employee they wish to edit and which manager they wish to assign to them.
 const empObject = await inquirer.prompt([
   {
     type: 'list',
@@ -166,7 +178,7 @@ const empObject = await inquirer.prompt([
     prefix: '-'
   },
 ]);
-
+// Edits given employee's data in the table to reflect new manager assigned.
 await db.query(
     `
         UPDATE employee
@@ -181,8 +193,9 @@ console.log(`Employee's manager updated.`);
 console.log("");
 };
 
+// Function to remove an employee.
 const remEmp = async () => {
-
+// Pulls a list of available employees and assigns them to a choices array.
 const employeeOptions = await empList();
 
 const employeeChoices = employeeOptions.map(emp => ({
@@ -191,6 +204,7 @@ const employeeChoices = employeeOptions.map(emp => ({
 }) );
 
 console.log("");
+// Asks user which employee they wish to remove.
 const empObject = await inquirer.prompt([
   {
     type: 'list',
@@ -200,7 +214,7 @@ const empObject = await inquirer.prompt([
     prefix: '-'
   }
 ]);
-
+// Edits employees table to remove selected employee.
 await db.query(
     `
     DELETE FROM employee
@@ -214,6 +228,7 @@ console.log("Chosen employee removed.");
 console.log("");
 };
 
+// DB query to pull list of managers.
 const managerList = async () => {
   const data = await db.query(`
     SELECT e.id, CONCAT(e.first_name, ' ', e.last_name, ' from ', d.name) name, r.is_manager
@@ -226,6 +241,7 @@ const managerList = async () => {
   return data;
 };
 
+// Exports functions needed to be called elsewhere.
 module.exports = {
   viewEmp,
   addEmp,

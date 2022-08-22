@@ -1,14 +1,17 @@
+// Pulls in required items.
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
 const { db } = require("../helpers/connection");
 const utils = require("util");
-
-const { deptList } = require("./department");
-
 const { table } = require("../helpers/utils");
 
+// Connects to needed departments function.
+const { deptList } = require("./department");
+
+// Allows db.query to use async and await.
 db.query = utils.promisify(db.query);
 
+// DB query to pull roles list.
 const roleList = async () => {
   const data = await db.query(`
         SELECT r.id ID, r.title Title, d.name Department, r.salary Salary
@@ -18,12 +21,15 @@ const roleList = async () => {
   return data;
 };
 
+// Function to display list of roles.
 const viewRole = async () => {
   const info = await roleList();
   table(info);
 }
 
+// Function to add a new role
 const addRole = async () => {
+  // Pulls a list of available departments and assigns them to a choices list.
   const depts = await deptList();
 
   const deptChoices = depts.map((dept) => ({
@@ -32,6 +38,7 @@ const addRole = async () => {
   }));
 
   console.log("");
+  // Asks the user for info about the new role, and selects a department to assign it to.
   const roleObject = await inquirer.prompt([
     {
       type: "input",
@@ -78,6 +85,7 @@ const addRole = async () => {
     },
   ]);
 
+  // Inserts the new role into the table.
   await db.query(
     `
         INSERT INTO role (title, salary, department_id, is_manager)
@@ -91,7 +99,9 @@ const addRole = async () => {
   console.log("");
 }
 
+// Function to remove a role.
 const remRole = async () => {
+  // Pulls a list of available roles and assigns them to a choices list.
   const allRoles = await roleList();
 
   const roleChoices = allRoles.map((role) => ({
@@ -99,6 +109,8 @@ const remRole = async () => {
     value: role.ID,
   }));
 
+  // Asks the user which role they wish to remove.
+  console.log("");
   const chosenRole = await inquirer.prompt([
     {
       type: "list",
@@ -109,6 +121,7 @@ const remRole = async () => {
     },
   ]);
 
+  // Removes the selected role from the table.
   await db.query(
     `
         DELETE FROM role
@@ -122,4 +135,5 @@ const remRole = async () => {
   console.log("");
 }
 
+// Exports functions needed to be called elsewhere.
 module.exports = { viewRole, roleList, addRole, remRole };

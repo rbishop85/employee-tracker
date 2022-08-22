@@ -1,16 +1,14 @@
-const mysql = require('mysql2');
+// Pulling in required items.
 const inquirer = require('inquirer');
 const utils = require('util')
 
-const db = require('./helpers/connection');
-
+// Pulling in needed functions and data from other files.
 const { viewDept, addDept, remDept } = require('./interactions/department');
 const { viewRole, addRole, remRole } = require('./interactions/role');
 const { viewEmp, addEmp, updateEmpRole, updateEmpMan, remEmp } = require('./interactions/employee');
 const { whatToDoQs, deptToDoQs, roleToDoQs, empToDoQs } = require('./helpers/questions');
 
-const { table } = require('./helpers/utils');
-
+// Function to ask what table the user wishes to work in and then send them to the related function.
 async function whatToDo() {
 
   console.log('');
@@ -43,6 +41,7 @@ async function whatToDo() {
 
 };
 
+// Function to ask the user what task they wish to perform in the departments table, and then direct them to the selected function.
 async function departments() {
 
   const toDo = {
@@ -69,9 +68,8 @@ async function departments() {
   }
 };
 
+// Function to ask the user what task they wish to perform in the roles table, and then direct them to the selected function.
 async function roles() {
-
-  console.log('');
 
   const toDo = {
     viewRole: viewRole,
@@ -97,9 +95,8 @@ async function roles() {
   }
 };
 
+// Function to ask the user what task they wish to perform in the employees table, and then direct them to the selected function.
 async function employees() {
-
-  console.log('');
 
   const toDo = {
     viewEmp: viewEmp,
@@ -128,10 +125,12 @@ async function employees() {
 
 };
 
+// Initial program to welcome the user and then direct them to the Function for them to select their desired task.
 function init() {
   console.log('');
   console.log('Greetings Business Owner!');
   whatToDo();
 }
 
+// Calling the app's initial function.
 init();
