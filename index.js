@@ -5,7 +5,7 @@ const utils = require('util')
 const db = require('./helpers/connection');
 
 const { viewDept, deptList, addDept, remDept } = require('./interactions/department');
-const { roleList, newRole, deleteRole } = require('./interactions/role');
+const { viewRole, roleList, addRole, remRole } = require('./interactions/role');
 const { empList, newEmp, updEmpRole, managerList, updEmpMan, deleteEmp } = require('./interactions/employee');
 const { whatToDoQs, deptToDoQs, roleToDoQs, empToDoQs } = require('./helpers/questions');
 
@@ -92,103 +92,9 @@ async function roles() {
   if (options.choice === 'back') {
     whatToDo();
   } else {
-    toDo[options.choice]();
+    await toDo[options.choice]();
+    roles();
   }
-};
-
-async function viewRole() {
-const info = await roleList();
-table(info);
-roles();
-};
-
-async function addRole() {
-
-const depts = await deptList();
-
-const deptChoices = depts.map(dept => ({
-  name: dept.Department,
-  value: dept.ID
-}) );
-
-console.log("Adding New Role...")
-const roleObject = await inquirer.prompt([
-  {
-    type: 'input',
-    message: 'What is the name of the new role?',
-    name: 'name',
-    prefix: '-',
-    validate: Boolean
-  },
-  {
-    type: 'input',
-    message: 'What is the salary for the new role?',
-    name: 'salary',
-    prefix: '-',
-    validate: function(value) {
-      var pass = !isNaN(value)
-      if (pass) {
-        return true
-      }
-      return 'Please enter a valid number for the salary'
-    },
-  },
-  {
-    type: 'list',
-    message: 'Which department does the role belong to?',
-    name: 'dept',
-    choices: deptChoices,
-    prefix: '-'
-  },
-  {
-    type: 'list',
-    message: 'Is this role considered a manager?',
-    name: 'manager',
-    choices: [
-      {
-        name: 'Yes',
-        value: true
-      },
-      {
-        name: 'No',
-        value: false
-      }
-    ],
-    prefix: '-'
-  }
-]);
-newRole(roleObject);
-console.log("");
-console.log('New role added.')
-roles();
-
-};
-
-async function remRole() {
-
-const allRoles = await roleList();
-
-// console.log(allRoles);
-
-const roleChoices = allRoles.map(role => ({
-  name: role.Title,
-  value: role.ID
-}) );
-
-const chosenRole = await inquirer.prompt([
-  {
-    type: 'list',
-    message: 'Which Department would you like to remove?',
-    name: 'choice',
-    choices: roleChoices,
-    prefix: '-'
-  }
-]);
-
-deleteRole(chosenRole.choice);
-console.log("Chosen role removed.")
-roles();
-
 };
 
 async function employees() {
